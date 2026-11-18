@@ -1,0 +1,14 @@
+{
+  "id": "urn:ngsi-ld:HoneyHarvest:2026-sierra-north-lot-07",
+  "type": "HoneyHarvest",
+  "name": "Spring 2026 harvest, Sierra North",
+  "dateHarvested": "2026-05-28T08:00:00Z",
+  "lotNumber": "L2026-SN-07",
+  "weight": 312.5,
+  "moistureContent": 0.172,
+  "botanicalOrigin": "Rosmarinus officinalis",
+  "hasApiary": "urn:ngsi-ld:Apiary:sierra-north",
+  "hasBeehive": [
+    "urn:ngsi-ld:Beehive:sierra-north-hive-014"
+  ]
+}

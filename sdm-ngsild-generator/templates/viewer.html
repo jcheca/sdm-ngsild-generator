@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="__LANG__">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<!-- Visor autocontenido de sdm-ngsild-generator: sin dependencias externas, funciona sin conexión. -->
+<style>
+:root {
+  --bg: #f7f7f5; --surface: #ffffff; --text: #1d1f21; --muted: #5f6368; --border: #dcdcd7;
+  --accent: #1a5fb4; --new: #1e7a46; --new-bg: #e3f4ea; --reused: #1a5fb4; --reused-bg: #e3edfb;
+  --commons: #6b4fa0; --commons-bg: #efe9f8; --original: #5f6368; --original-bg: #eeeeec;
+  --added: #a8550f; --added-bg: #fbeee0; --code-bg: #f1f1ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181a; --surface: #1f2124; --text: #e6e6e3; --muted: #a3a6aa; --border: #34373b;
+    --accent: #79a7ec; --new: #6fcf97; --new-bg: #1d3328; --reused: #79a7ec; --reused-bg: #1c2a40;
+    --commons: #b9a0e6; --commons-bg: #2b2340; --original: #a3a6aa; --original-bg: #2a2c2f;
+    --added: #f0a35e; --added-bg: #3a2a1a; --code-bg: #26282b;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.6rem; margin: 0 0 4px; }
+h2 { font-size: 1.2rem; margin: 40px 0 12px; }
+h3 { font-size: 1.05rem; margin: 0; }
+p.intro, .muted { color: var(--muted); }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .78rem;
+  border: 1px solid var(--border); margin-right: 6px; white-space: nowrap; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; margin: 12px 0; }
+.card header { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+.label { color: var(--muted); font-size: .9rem; }
+.diagram { overflow-x: auto; }
+.diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: .85rem; color: var(--muted); }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px;
+  margin-right: 6px; border: 2px solid var(--border); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.filters button { font: inherit; font-size: .85rem; padding: 3px 10px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+td code { font-size: .86rem; }
+.o-new { color: var(--new); background: var(--new-bg); border-color: transparent; }
+.o-reused { color: var(--reused); background: var(--reused-bg); border-color: transparent; }
+.o-commons { color: var(--commons); background: var(--commons-bg); border-color: transparent; }
+.o-original { color: var(--original); background: var(--original-bg); border-color: transparent; }
+.o-added { color: var(--added); background: var(--added-bg); border-color: transparent; }
+.examples { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) { .examples { grid-template-columns: 1fr; } }
+pre { background: var(--code-bg); border-radius: 8px; padding: 12px; margin: 6px 0 0; overflow: auto;
+  max-height: 420px; font-size: .8rem; line-height: 1.4; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+ul.concepts { padding-left: 20px; }
+ul.concepts li { margin: 6px 0; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title"></h1>
+    <p class="intro" id="intro"></p>
+    <p id="meta"></p>
+  </header>
+  <section>
+    <h2 id="h-diagram"></h2>
+    <div class="card diagram" id="diagram"></div>
+    <div class="legend" id="legend"></div>
+  </section>
+  <section>
+    <h2 id="h-attributes"></h2>
+    <div id="items"></div>
+  </section>
+  <section>
+    <h2 id="h-examples"></h2>
+    <div id="examples"></div>
+  </section>
+  <section>
+    <h2 id="h-concepts"></h2>
+    <ul class="concepts" id="concepts"></ul>
+  </section>
+</main>
+<script type="application/json" id="proposal-data">/*__DATA__*/</script>
+<script>
+(function () {
+  "use strict";
+  var data = JSON.parse(document.getElementById("proposal-data").textContent);
+  var S = data.strings;
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === "text") node.textContent = attrs[k]; else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) node.appendChild(c); });
+    return node;
+  }
+  function badge(text, cls) { return el("span", {"class": "badge " + (cls || ""), text: text}); }
+  function nameWithLabel(name, label) {
+    var span = el("span", {}, [el("code", {text: name})]);
+    if (label) span.appendChild(el("span", {"class": "label", text: " · " + label}));
+    return span;
+  }
+
+  document.title = S.viewer_title + " · " + (data.subject || "");
+  document.getElementById("title").textContent = S.viewer_title;
+  document.getElementById("intro").textContent = S.viewer_intro;
+  var meta = document.getElementById("meta");
+  if (data.subject) {
+    meta.appendChild(badge(S.subject + ": " + data.subject));
+    meta.appendChild(badge(data.newSubject ? S.new_subject : S.existing_subject));
+  }
+  if (data.domains && data.domains.length) meta.appendChild(badge(S.domains + ": " + data.domains.join(", ")));
+  meta.appendChild(el("span", {"class": "muted", text: data.countsText}));
+
+  document.getElementById("h-diagram").textContent = S.diagram;
+  document.getElementById("diagram").innerHTML = data.diagram;
+  var legend = document.getElementById("legend");
+  [["new", S.diagram_legend_new], ["ext", S.diagram_legend_ext], ["ref", S.diagram_legend_ref]]
+    .forEach(function (pair) {
+      var sw = el("span", {"class": "swatch", style: data.legendStyles[pair[0]]});
+      legend.appendChild(el("span", {}, [sw, document.createTextNode(pair[1])]));
+    });
+
+  document.getElementById("h-attributes").textContent = S.attributes;
+  var originNames = {"new": S.origin_new, "reused": S.origin_reused, "commons": S.origin_commons,
+                     "original": S.origin_original, "added": S.origin_added};
+  var itemsBox = document.getElementById("items");
+  data.items.forEach(function (item) {
+    var card = el("article", {"class": "card", id: "item-" + item.name});
+    var head = el("header", {}, [el("h3", {}, [nameWithLabel(item.name, item.label)])]);
+    head.appendChild(badge(item.kind === "extension" ? S.extension : S.origin_new,
+                           item.kind === "extension" ? "o-added" : "o-new"));
+    head.appendChild(badge(S.version + " " + (item.originalVersion ? item.originalVersion + " → " : "") + item.version));
+    head.appendChild(badge(item.subject));
+    card.appendChild(head);
+    card.appendChild(el("p", {"class": "muted", text: item.description}));
+    var present = {};
+    item.attributes.forEach(function (a) { present[a.origin] = (present[a.origin] || 0) + 1; });
+    var filters = el("div", {"class": "filters", role: "group"});
+    var rows = [];
+    function apply(origin) {
+      Array.prototype.forEach.call(filters.children, function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.origin === origin));
+      });
+      rows.forEach(function (r) { r.classList.toggle("hidden", origin !== "all" && r.dataset.origin !== origin); });
+    }
+    var all = el("button", {type: "button", "data-origin": "all", "aria-pressed": "true",
+                            text: "∑ " + item.attributes.length});
+    all.addEventListener("click", function () { apply("all"); });
+    filters.appendChild(all);
+    ["new", "added", "reused", "commons", "original"].forEach(function (o) {
+      if (!present[o]) return;
+      var b = el("button", {type: "button", "data-origin": o, "aria-pressed": "false",
+                            text: originNames[o] + " (" + present[o] + ")"});
+      b.addEventListener("click", function () { apply(o); });
+      filters.appendChild(b);
+    });
+    card.appendChild(filters);
+    var table = el("table");
+    var thead = el("tr");
+    [S.attribute, S.ngsi_type, S.json_type, S.units, S.origin, S.description].forEach(function (h) {
+      thead.appendChild(el("th", {text: h}));
+    });
+    table.appendChild(el("thead", {}, [thead]));
+    var tbody = el("tbody");
+    item.attributes.forEach(function (a) {
+      var origin = el("td", {}, [badge(originNames[a.origin] || a.origin, "o-" + a.origin)]);
+      if (a.source) origin.appendChild(el("div", {"class": "label", text: a.source}));
+      var tr = el("tr", {"data-origin": a.origin}, [
+        el("td", {}, [nameWithLabel(a.name, a.label)]),
+        el("td", {text: a.ngsi}), el("td", {text: a.type}), el("td", {text: a.units || ""}),
+        origin, el("td", {text: a.description || ""})]);
+      rows.push(tr);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    card.appendChild(el("div", {"class": "table-wrap"}, [table]));
+    itemsBox.appendChild(card);
+  });
+
+  document.getElementById("h-examples").textContent = S.examples;
+  var exBox = document.getElementById("examples");
+  data.items.forEach(function (item) {
+    var card = el("article", {"class": "card"}, [el("h3", {}, [nameWithLabel(item.name, item.label)])]);
+    var tabs = el("div", {"class": "tabs filters"});
+    var grid = el("div", {"class": "examples"});
+    var left = el("pre"), right = el("pre");
+    var leftTitle = el("strong"), rightTitle = el("strong");
+    grid.appendChild(el("div", {}, [leftTitle, left]));
+    grid.appendChild(el("div", {}, [rightTitle, right]));
+    function show(mode) {
+      var v2 = mode === "kv" ? "example.json" : "example-normalized.json";
+      var ld = mode === "kv" ? "example.jsonld" : "example-normalized.jsonld";
+      var label = mode === "kv" ? S.keyvalues : S.normalized;
+      leftTitle.textContent = "NGSI v2 · " + label + " (" + v2 + ")";
+      rightTitle.textContent = "NGSI-LD · " + label + " (" + ld + ")";
+      left.textContent = JSON.stringify(item.examples[v2] || {}, null, 2);
+      right.textContent = JSON.stringify(item.examples[ld] || {}, null, 2);
+      Array.prototype.forEach.call(tabs.children, function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.mode === mode));
+      });
+    }
+    [["kv", S.keyvalues], ["norm", S.normalized]].forEach(function (pair) {
+      var b = el("button", {type: "button", "data-mode": pair[0], text: pair[1]});
+      b.addEventListener("click", function () { show(pair[0]); });
+      tabs.appendChild(b);
+    });
+    card.appendChild(tabs);
+    card.appendChild(grid);
+    exBox.appendChild(card);
+    show("norm");
+  });
+
+  document.getElementById("h-concepts").textContent = S.concepts;
+  var concepts = document.getElementById("concepts");
+  data.concepts.forEach(function (c) { concepts.appendChild(el("li", {text: c})); });
+}());
+</script>
+</body>
+</html>

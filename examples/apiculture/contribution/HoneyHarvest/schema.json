@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schemaVersion": "0.0.1",
+  "$id": "https://smart-data-models.github.io/dataModel.Apiculture/HoneyHarvest/schema.json",
+  "title": "Smart Data Models - Honey Harvest",
+  "description": "A honey harvest (extraction) operation, linking the resulting honey lot to the beehives it comes from for traceability and labelling",
+  "modelTags": "beekeeping apiculture honey harvest traceability",
+  "derivedFrom": "",
+  "license": "https://smart-data-models.github.io/dataModel.Apiculture/HoneyHarvest/LICENSE.md",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://smart-data-models.github.io/data-models/common-schema.json#/definitions/GSMA-Commons"
+    },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "HoneyHarvest"
+          ],
+          "description": "Property. NGSI Entity type. It has to be HoneyHarvest"
+        },
+        "dateHarvested": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Property. Model:'https://schema.org/DateTime'. Date and time when the honey was extracted from the frames"
+        },
+        "lotNumber": {
+          "type": "string",
+          "description": "Property. Model:'https://schema.org/Text'. Lot number assigned to the harvested honey for labelling and traceability"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Property. Model:'https://schema.org/Number'. Units:'kilogram (KGM)'. Net weight of the extracted honey"
+        },
+        "moistureContent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Property. Model:'https://schema.org/Number'. Units:'C62'. Water content of the honey as a ratio between 0 and 1, a key quality parameter"
+        },
+        "botanicalOrigin": {
+          "type": "string",
+          "description": "Property. Model:'https://schema.org/Text'. Declared botanical origin of the honey, either monofloral (plant species) or multifloral"
+        },
+        "hasApiary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[\\w\\-\\.\\{\\}\\$\\+\\*\\[\\]`|~^@!,:\\\\]+$",
+              "description": "Property. Identifier format of any NGSI entity"
+            },
+            {
+              "type": "string",
+              "format": "uri",
+              "description": "Property. Identifier format of any NGSI entity"
+            }
+          ],
+          "description": "Relationship. Reference to the Apiary where the honey was harvested"
+        },
+        "hasBeehive": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^[\\w\\-\\.\\{\\}\\$\\+\\*\\[\\]`|~^@!,:\\\\]+$",
+                "description": "Property. Identifier format of any NGSI entity"
+              },
+              {
+                "type": "string",
+                "format": "uri",
+                "description": "Property. Identifier format of any NGSI entity"
+              }
+            ]
+          },
+          "description": "Relationship. References to the Beehives whose frames were extracted in this harvest"
+        }
+      }
+    }
+  ],
+  "required": [
+    "id",
+    "type"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "urn:ngsi-ld:Beehive:apiary-sierra-hive-014",
+  "type": "Beehive",
+  "name": "Hive 14 - Sierra apiary",
+  "description": "Langstroth hive with scale and in-hive sensors",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -4.8012,
+      37.9431
+    ]
+  },
+  "category": "langstroth",
+  "species": "Apis mellifera iberiensis",
+  "frameCount": 10,
+  "queenBirthYear": 2025,
+  "status": "queenright",
+  "dateLastInspection": "2026-05-02T10:00:00Z",
+  "dateObserved": "2026-05-12T09:15:00Z",
+  "weight": 48.6,
+  "temperature": 34.8,
+  "relativeHumidity": 0.58,
+  "soundPressureLevel": 62.5,
+  "dominantSoundFrequency": 245,
+  "beeEntranceCount": 1830,
+  "beeExitCount": 1765,
+  "refDevice": "urn:ngsi-ld:Device:b9cd10f9-877d-5ded-9c4d-683ee993b620",
+  "hasAgriParcel": "urn:ngsi-ld:AgriParcel:1b2c46e7-8c38-5c88-91a5-a5c5ddbbbf50"
+}

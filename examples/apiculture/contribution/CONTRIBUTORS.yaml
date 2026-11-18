@@ -1,0 +1,10 @@
+description: This is a compilation list of all CONTRIBUTORS across different objects
+  (data models) alphabetically ordered. All fields are non mandatory
+contributors:
+- name: Example
+  surname: Contributor
+  mail: null
+  organization: Example Beekeeping Cooperative
+  project: Precision apiculture pilot
+  comments: null
+  year: 2026

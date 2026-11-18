@@ -1,0 +1,108 @@
+{
+  "id": "urn:ngsi-ld:Beehive:apiary-sierra-hive-014",
+  "type": "Beehive",
+  "name": {
+    "type": "Property",
+    "value": "Hive 14 - Sierra apiary"
+  },
+  "description": {
+    "type": "Property",
+    "value": "Langstroth hive with scale and in-hive sensors"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -4.8012,
+        37.9431
+      ]
+    }
+  },
+  "category": {
+    "type": "Property",
+    "value": "langstroth"
+  },
+  "species": {
+    "type": "Property",
+    "value": "Apis mellifera iberiensis"
+  },
+  "frameCount": {
+    "type": "Property",
+    "value": 10
+  },
+  "queenBirthYear": {
+    "type": "Property",
+    "value": 2025
+  },
+  "status": {
+    "type": "Property",
+    "value": "queenright"
+  },
+  "dateLastInspection": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-05-02T10:00:00Z"
+    }
+  },
+  "dateObserved": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-05-12T09:15:00Z"
+    }
+  },
+  "weight": {
+    "type": "Property",
+    "value": 48.6,
+    "unitCode": "KGM",
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "temperature": {
+    "type": "Property",
+    "value": 34.8,
+    "unitCode": "CEL",
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "relativeHumidity": {
+    "type": "Property",
+    "value": 0.58,
+    "unitCode": "C62",
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "soundPressureLevel": {
+    "type": "Property",
+    "value": 62.5,
+    "unitCode": "2N",
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "dominantSoundFrequency": {
+    "type": "Property",
+    "value": 245,
+    "unitCode": "HTZ",
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "beeEntranceCount": {
+    "type": "Property",
+    "value": 1830,
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "beeExitCount": {
+    "type": "Property",
+    "value": 1765,
+    "observedAt": "2026-05-12T09:15:00Z"
+  },
+  "refDevice": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Device:b9cd10f9-877d-5ded-9c4d-683ee993b620"
+  },
+  "hasAgriParcel": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:AgriParcel:1b2c46e7-8c38-5c88-91a5-a5c5ddbbbf50"
+  },
+  "@context": [
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    "https://raw.githubusercontent.com/smart-data-models/dataModel.Agrifood/master/context.jsonld"
+  ]
+}

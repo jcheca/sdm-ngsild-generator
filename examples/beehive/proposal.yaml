@@ -1,0 +1,173 @@
+# Caso de uso (fase 1): monitorización de colmenas en apicultura de precisión.
+# Una báscula con sensores bajo cada colmena envía cada 15 minutos peso, temperatura y
+# humedad internas, nivel y frecuencia dominante del sonido y recuento de abejas en la
+# piquera. El apicultor consulta el estado de la colonia y recibe alertas (enjambrazón,
+# pérdida de reina, robo). Produce: la báscula IoT; consumen: app del apicultor y la
+# plataforma de la cooperativa. Datos estáticos (tipo de colmena, cuadros, reina) y
+# medidas en la misma entidad, como WasteContainer (manifiesto: plano, no profundo).
+subject: dataModel.Agrifood
+metadata:
+  license: CC-BY-4.0
+  contributors:
+    - name: Example
+      surname: Contributor
+      organization: Example Beekeeping Cooperative
+      project: Precision apiculture pilot
+      year: 2026
+decisions:
+  - item: Agrifood/Animal
+    decision: discarded
+    reason: Models individual animals with legal identification and genealogy; a bee colony is managed as a unit
+    source: dataModel.Agrifood/Animal
+  - item: FishContainment
+    decision: discarded
+    reason: Aquatic containment unit with water quality parameters; only the container pattern is similar
+    source: dataModel.Aquaculture/FishContainment
+  - item: WasteContainer
+    decision: discarded
+    reason: Unrelated domain; used only as reference for mixing static data and observations in one entity
+    source: dataModel.WasteManagement/WasteContainer
+  - item: Beehive
+    decision: new
+    reason: No beekeeping model found in the repository (searched beehive, hive, apiary, apiculture, bee, honey, pollinator)
+  - item: batteryLevel
+    decision: discarded
+    reason: Belongs to the Device entity of the scale, already modelled in dataModel.Device
+    source: dataModel.Device/Device
+  - item: hasAgriFarm
+    decision: discarded
+    reason: Does not exist in the repository; the farm is reachable through hasAgriParcel
+entities:
+  - name: Beehive
+    title: Smart Data Models - Beehive
+    description: A managed beehive (colony and its hive body) in an apiary, including its configuration and the latest conditions observed by in-hive sensors
+    modelTags: beekeeping apiculture beehive bee colony
+    commons: [GSMA-Commons, Location-Commons]
+    required: []
+    notes:
+      notesReadme: Beehive monitoring for precision apiculture. Static hive data and the latest observed conditions are kept in the same entity.
+    example:
+      id: urn:ngsi-ld:Beehive:apiary-sierra-hive-014
+      observedAt: "2026-05-12T09:15:00Z"
+      commons:
+        name: Hive 14 - Sierra apiary
+        description: Langstroth hive with scale and in-hive sensors
+        location: {type: Point, coordinates: [-4.8012, 37.9431]}
+    attributes:
+      - name: category
+        type: string
+        enum: [langstroth, dadant, layens, warre, topBar, other]
+        description: Type of hive body
+        example: langstroth
+        origin: reused
+        reusedFrom: dataModel.WasteManagement/WasteContainer
+      - name: species
+        type: string
+        description: Scientific name of the bee species housed in the hive
+        example: Apis mellifera iberiensis
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: frameCount
+        type: integer
+        minimum: 0
+        description: Number of frames currently installed in the hive
+        example: 10
+        origin: new
+      - name: queenBirthYear
+        type: integer
+        minimum: 1990
+        description: Year in which the current queen was born, used to plan requeening
+        example: 2025
+        origin: new
+      - name: status
+        type: string
+        enum: [queenright, queenless, swarming, robbing, dead, unknown]
+        description: Assessed status of the colony
+        example: queenright
+        origin: reused
+        reusedFrom: dataModel.Streetlighting/Streetlight
+      - name: dateLastInspection
+        type: string
+        format: date-time
+        description: Date and time of the last manual inspection of the hive by the beekeeper
+        example: "2026-05-02T10:00:00Z"
+        origin: new
+      - name: dateObserved
+        type: string
+        format: date-time
+        description: Date and time of the latest sensor observation in ISO8601 UTC format
+        origin: reused
+        reusedFrom: dataModel.Environment/AirQualityObserved
+      - name: weight
+        type: number
+        minimum: 0
+        units: KGM
+        unitsText: kilogram
+        description: Gross weight of the hive including bees, honey, brood and hive body
+        temporal: true
+        example: 48.6
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: temperature
+        type: number
+        units: CEL
+        unitsText: degree Celsius
+        description: Temperature measured inside the hive, in the brood area
+        temporal: true
+        example: 34.8
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Compartment
+      - name: relativeHumidity
+        type: number
+        minimum: 0
+        maximum: 1
+        units: C62
+        description: Relative humidity measured inside the hive, between 0 and 1
+        temporal: true
+        example: 0.58
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
+      - name: soundPressureLevel
+        type: number
+        units: 2N
+        unitsText: decibel
+        description: Sound pressure level measured inside the hive, an indicator of colony activity and swarming
+        temporal: true
+        example: 62.5
+        origin: new
+        justification: noiseLevel exists but describes the sound power emitted by a device, not the sound measured inside an enclosure
+      - name: dominantSoundFrequency
+        type: number
+        minimum: 0
+        units: HTZ
+        unitsText: hertz
+        description: Dominant frequency of the sound measured inside the hive, used to detect queenlessness and swarming
+        temporal: true
+        example: 245
+        origin: new
+      - name: beeEntranceCount
+        type: integer
+        minimum: 0
+        description: Number of bees entering the hive during the last observation period
+        temporal: true
+        example: 1830
+        origin: new
+      - name: beeExitCount
+        type: integer
+        minimum: 0
+        description: Number of bees leaving the hive during the last observation period
+        temporal: true
+        example: 1765
+        origin: new
+      - name: refDevice
+        ngsi: Relationship
+        target: Device
+        description: Reference to the Device entity of the scale and sensors installed in the hive
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
+      - name: hasAgriParcel
+        ngsi: Relationship
+        target: AgriParcel
+        description: Reference to the AgriParcel where the apiary is located
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord

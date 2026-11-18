@@ -1,0 +1,46 @@
+{
+  "id": "urn:ngsi-ld:Apiary:sierra-north",
+  "type": "Apiary",
+  "name": {
+    "type": "Property",
+    "value": "Sierra North apiary"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -4.8012,
+        37.9431
+      ]
+    }
+  },
+  "legalId": {
+    "type": "Property",
+    "value": "ES140210000123"
+  },
+  "hiveCapacity": {
+    "type": "Property",
+    "value": 60
+  },
+  "isMigratory": {
+    "type": "Property",
+    "value": true
+  },
+  "forageSpecies": {
+    "type": "Property",
+    "value": [
+      "Rosmarinus officinalis",
+      "Lavandula stoechas",
+      "Quercus ilex"
+    ]
+  },
+  "hasAgriParcel": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:AgriParcel:1b2c46e7-8c38-5c88-91a5-a5c5ddbbbf50"
+  },
+  "@context": [
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    "https://raw.githubusercontent.com/smart-data-models/dataModel.Apiculture/master/context.jsonld"
+  ]
+}

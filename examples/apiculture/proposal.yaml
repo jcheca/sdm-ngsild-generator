@@ -1,0 +1,256 @@
+# Caso de uso: cooperativa apícola con 40 colmenares (algunos trashumantes) y unas 1.200
+# colmenas monitorizadas. La cooperativa necesita: (1) el inventario de colmenares y su
+# registro oficial, (2) el estado de cada colmena en tiempo casi real (báscula y sensores)
+# y (3) la trazabilidad de cada cosecha de miel hasta las colmenas de origen, para el
+# etiquetado del lote. Tres ciclos de vida distintos: colmenar (casi estático), colmena
+# (medidas cada 15 min) y cosecha (evento puntual) -> tres entidades enlazadas.
+language: es                      # idioma del usuario: visor e informe (el modelo, en inglés)
+subject: dataModel.Apiculture
+newSubject:
+  domains: [SmartAgrifood]
+  notes:
+    notesPrevious: Data models for beekeeping (apiculture), covering apiaries, monitored beehives and honey harvests.
+    notesEnd: ""
+metadata:
+  license: CC-BY-4.0
+  contributors:
+    - name: Example
+      surname: Contributor
+      organization: Example Beekeeping Cooperative
+      project: Precision apiculture pilot
+      year: 2026
+decisions:
+  - item: dataModel.Agrifood (subject)
+    decision: discarded
+    reason: A family of three beekeeping models deserves its own subject, as dataModel.Aquaculture does for fish farming; Agrifood models are reused through relationships (AgriParcel)
+    source: dataModel.Aquaculture
+  - item: examples/beehive (single Beehive entity in Agrifood)
+    decision: extended
+    reason: Same Beehive concept, now linked to an Apiary instead of directly to an AgriParcel
+  - item: Agrifood/Animal
+    decision: discarded
+    reason: Individual animals with genealogy; a colony is managed as a unit. Only legalId is reused
+    source: dataModel.Agrifood/Animal
+  - item: AgriFarm
+    decision: discarded
+    reason: An apiary is a set of hives at one site, often on land the beekeeper does not farm; it links to AgriParcel instead
+    source: dataModel.Agrifood/AgriFarm
+  - item: batteryLevel
+    decision: discarded
+    reason: Belongs to the Device entity of the hive scale
+    source: dataModel.Device/Device
+entities:
+  - name: Apiary
+    label: Colmenar
+    title: Smart Data Models - Apiary
+    description: A site where a group of beehives is kept, with its official registration, capacity and the forage available around it
+    modelTags: beekeeping apiculture apiary
+    commons: [GSMA-Commons, Location-Commons]
+    example:
+      id: urn:ngsi-ld:Apiary:sierra-north
+      commons:
+        name: Sierra North apiary
+        location: {type: Point, coordinates: [-4.8012, 37.9431]}
+    attributes:
+      - name: legalId
+        label: código de registro oficial
+        type: string
+        description: Official registration code of the apiary in the national livestock registry
+        example: ES140210000123
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: hiveCapacity
+        label: capacidad de colmenas
+        type: integer
+        minimum: 0
+        description: Maximum number of hives the apiary is authorised or equipped to hold
+        example: 60
+        origin: new
+      - name: isMigratory
+        label: trashumante
+        type: boolean
+        description: Whether the hives of this apiary are moved seasonally to follow the blooming (transhumance)
+        example: true
+        origin: new
+      - name: forageSpecies
+        label: especies de pecoreo
+        type: array
+        description: Main plant species available for foraging around the apiary
+        items: {type: string, description: Scientific name of a forage plant species}
+        example: [Rosmarinus officinalis, Lavandula stoechas, Quercus ilex]
+        origin: new
+      - name: hasAgriParcel
+        label: parcela
+        ngsi: Relationship
+        target: AgriParcel
+        description: Reference to the AgriParcel where the apiary is located
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
+  - name: Beehive
+    label: Colmena
+    title: Smart Data Models - Beehive
+    description: A managed beehive (colony and its hive body) in an apiary, including its configuration and the latest conditions observed by in-hive sensors
+    modelTags: beekeeping apiculture beehive bee colony
+    commons: [GSMA-Commons, Location-Commons]
+    example:
+      id: urn:ngsi-ld:Beehive:sierra-north-hive-014
+      observedAt: "2026-05-12T09:15:00Z"
+      commons:
+        name: Hive 14 - Sierra North apiary
+        location: {type: Point, coordinates: [-4.8013, 37.9432]}
+    attributes:
+      - name: category
+        label: tipo de colmena
+        type: string
+        enum: [langstroth, dadant, layens, warre, topBar, other]
+        description: Type of hive body
+        example: langstroth
+        origin: reused
+        reusedFrom: dataModel.WasteManagement/WasteContainer
+      - name: species
+        label: especie de abeja
+        type: string
+        description: Scientific name of the bee species housed in the hive
+        example: Apis mellifera iberiensis
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: queenBirthYear
+        label: año de nacimiento de la reina
+        type: integer
+        minimum: 1990
+        description: Year in which the current queen was born, used to plan requeening
+        example: 2025
+        origin: new
+      - name: status
+        label: estado de la colonia
+        type: string
+        enum: [queenright, queenless, swarming, robbing, dead, unknown]
+        description: Assessed status of the colony
+        example: queenright
+        origin: reused
+        reusedFrom: dataModel.Streetlighting/Streetlight
+      - name: dateObserved
+        label: fecha de observación
+        type: string
+        format: date-time
+        description: Date and time of the latest sensor observation in ISO8601 UTC format
+        origin: reused
+        reusedFrom: dataModel.Environment/AirQualityObserved
+      - name: weight
+        label: peso
+        type: number
+        minimum: 0
+        units: KGM
+        unitsText: kilogram
+        description: Gross weight of the hive including bees, honey, brood and hive body
+        temporal: true
+        example: 48.6
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: temperature
+        label: temperatura interior
+        type: number
+        units: CEL
+        unitsText: degree Celsius
+        description: Temperature measured inside the hive, in the brood area
+        temporal: true
+        example: 34.8
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Compartment
+      - name: relativeHumidity
+        label: humedad relativa interior
+        type: number
+        minimum: 0
+        maximum: 1
+        units: C62
+        description: Relative humidity measured inside the hive, between 0 and 1
+        temporal: true
+        example: 0.58
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
+      - name: soundPressureLevel
+        label: nivel de presión sonora
+        type: number
+        units: 2N
+        unitsText: decibel
+        description: Sound pressure level measured inside the hive, an indicator of colony activity and swarming
+        temporal: true
+        example: 62.5
+        origin: new
+        justification: noiseLevel exists but describes the sound power emitted by a device, not the sound measured inside an enclosure
+      - name: refDevice
+        label: dispositivo (báscula)
+        ngsi: Relationship
+        target: Device
+        description: Reference to the Device entity of the scale and sensors installed in the hive
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
+      - name: hasApiary
+        label: colmenar
+        ngsi: Relationship
+        target: Apiary
+        description: Reference to the Apiary where the hive is currently placed
+        origin: new
+  - name: HoneyHarvest
+    label: Cosecha de miel
+    title: Smart Data Models - Honey Harvest
+    description: A honey harvest (extraction) operation, linking the resulting honey lot to the beehives it comes from for traceability and labelling
+    modelTags: beekeeping apiculture honey harvest traceability
+    commons: [GSMA-Commons]
+    example:
+      id: urn:ngsi-ld:HoneyHarvest:2026-sierra-north-lot-07
+      commons:
+        name: Spring 2026 harvest, Sierra North
+    attributes:
+      - name: dateHarvested
+        label: fecha de extracción
+        type: string
+        format: date-time
+        description: Date and time when the honey was extracted from the frames
+        example: "2026-05-28T08:00:00Z"
+        origin: new
+      - name: lotNumber
+        label: número de lote
+        type: string
+        description: Lot number assigned to the harvested honey for labelling and traceability
+        example: L2026-SN-07
+        origin: reused
+        reusedFrom: dataModel.Hl7/Immunization
+      - name: weight
+        label: peso
+        type: number
+        minimum: 0
+        units: KGM
+        unitsText: kilogram
+        description: Net weight of the extracted honey
+        example: 312.5
+        origin: reused
+        reusedFrom: dataModel.Agrifood/Animal
+      - name: moistureContent
+        label: humedad de la miel
+        type: number
+        minimum: 0
+        maximum: 1
+        units: C62
+        description: Water content of the honey as a ratio between 0 and 1, a key quality parameter
+        example: 0.172
+        origin: new
+      - name: botanicalOrigin
+        label: origen botánico
+        type: string
+        description: Declared botanical origin of the honey, either monofloral (plant species) or multifloral
+        example: Rosmarinus officinalis
+        origin: new
+      - name: hasApiary
+        label: colmenar
+        ngsi: Relationship
+        target: Apiary
+        description: Reference to the Apiary where the honey was harvested
+        origin: new
+      - name: hasBeehive
+        label: colmenas de origen
+        ngsi: Relationship
+        target: Beehive
+        multiple: true
+        description: References to the Beehives whose frames were extracted in this harvest
+        origin: new

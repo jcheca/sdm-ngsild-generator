@@ -1,0 +1,11 @@
+# Plantilla de ADOPTERS.yaml (formato oficial: data-models/templates/dataModel_for_submision/ADOPTERS.yaml).
+# {dataModel} y {subject} se sustituyen al generar. Todos los campos de los adoptantes son opcionales.
+description: "This is a compilation list of the current adopters of the data model {dataModel} of the Subject {subject}.  All fields are non mandatory. More info at https://smart-data-models.github.io/data-models/templates/dataModel/CURRENT_ADOPTERS.yaml"
+currentAdopters:
+  - adopter: null
+    description: null
+    mail: null
+    organization: null
+    project: null
+    comments: null
+    startDate: null

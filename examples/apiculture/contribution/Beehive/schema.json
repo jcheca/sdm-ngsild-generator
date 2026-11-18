@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schemaVersion": "0.0.1",
+  "$id": "https://smart-data-models.github.io/dataModel.Apiculture/Beehive/schema.json",
+  "title": "Smart Data Models - Beehive",
+  "description": "A managed beehive (colony and its hive body) in an apiary, including its configuration and the latest conditions observed by in-hive sensors",
+  "modelTags": "beekeeping apiculture beehive bee colony",
+  "derivedFrom": "",
+  "license": "https://smart-data-models.github.io/dataModel.Apiculture/Beehive/LICENSE.md",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://smart-data-models.github.io/data-models/common-schema.json#/definitions/GSMA-Commons"
+    },
+    {
+      "$ref": "https://smart-data-models.github.io/data-models/common-schema.json#/definitions/Location-Commons"
+    },
+    {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Beehive"
+          ],
+          "description": "Property. NGSI Entity type. It has to be Beehive"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "langstroth",
+            "dadant",
+            "layens",
+            "warre",
+            "topBar",
+            "other"
+          ],
+          "description": "Property. Model:'https://schema.org/Text'. Enum:'langstroth, dadant, layens, warre, topBar, other'. Type of hive body"
+        },
+        "species": {
+          "type": "string",
+          "description": "Property. Model:'https://schema.org/Text'. Scientific name of the bee species housed in the hive"
+        },
+        "queenBirthYear": {
+          "type": "integer",
+          "minimum": 1990,
+          "description": "Property. Model:'https://schema.org/Integer'. Year in which the current queen was born, used to plan requeening"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queenright",
+            "queenless",
+            "swarming",
+            "robbing",
+            "dead",
+            "unknown"
+          ],
+          "description": "Property. Model:'https://schema.org/Text'. Enum:'queenright, queenless, swarming, robbing, dead, unknown'. Assessed status of the colony"
+        },
+        "dateObserved": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Property. Model:'https://schema.org/DateTime'. Date and time of the latest sensor observation in ISO8601 UTC format"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Property. Model:'https://schema.org/Number'. Units:'kilogram (KGM)'. Gross weight of the hive including bees, honey, brood and hive body"
+        },
+        "temperature": {
+          "type": "number",
+          "description": "Property. Model:'https://schema.org/Number'. Units:'degree Celsius (CEL)'. Temperature measured inside the hive, in the brood area"
+        },
+        "relativeHumidity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Property. Model:'https://schema.org/Number'. Units:'C62'. Relative humidity measured inside the hive, between 0 and 1"
+        },
+        "soundPressureLevel": {
+          "type": "number",
+          "description": "Property. Model:'https://schema.org/Number'. Units:'decibel (2N)'. Sound pressure level measured inside the hive, an indicator of colony activity and swarming"
+        },
+        "refDevice": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[\\w\\-\\.\\{\\}\\$\\+\\*\\[\\]`|~^@!,:\\\\]+$",
+              "description": "Property. Identifier format of any NGSI entity"
+            },
+            {
+              "type": "string",
+              "format": "uri",
+              "description": "Property. Identifier format of any NGSI entity"
+            }
+          ],
+          "description": "Relationship. Reference to the Device entity of the scale and sensors installed in the hive"
+        },
+        "hasApiary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[\\w\\-\\.\\{\\}\\$\\+\\*\\[\\]`|~^@!,:\\\\]+$",
+              "description": "Property. Identifier format of any NGSI entity"
+            },
+            {
+              "type": "string",
+              "format": "uri",
+              "description": "Property. Identifier format of any NGSI entity"
+            }
+          ],
+          "description": "Relationship. Reference to the Apiary where the hive is currently placed"
+        }
+      }
+    }
+  ],
+  "required": [
+    "id",
+    "type"
+  ]
+}

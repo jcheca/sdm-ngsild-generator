@@ -1,0 +1,6 @@
+# Plantilla de notes.yaml (formato oficial: data-models/templates/dataModel_for_submision/notes.yaml).
+# generate.py rellena cada clave con el texto de la propuesta (siempre en inglés).
+notesHeader: ""
+notesMiddle: ""
+notesFooter: ""
+notesReadme: ""

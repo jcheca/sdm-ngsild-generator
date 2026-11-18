@@ -1,0 +1,21 @@
+{
+  "id": "urn:ngsi-ld:Apiary:sierra-north",
+  "type": "Apiary",
+  "name": "Sierra North apiary",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -4.8012,
+      37.9431
+    ]
+  },
+  "legalId": "ES140210000123",
+  "hiveCapacity": 60,
+  "isMigratory": true,
+  "forageSpecies": [
+    "Rosmarinus officinalis",
+    "Lavandula stoechas",
+    "Quercus ilex"
+  ],
+  "hasAgriParcel": "urn:ngsi-ld:AgriParcel:1b2c46e7-8c38-5c88-91a5-a5c5ddbbbf50"
+}

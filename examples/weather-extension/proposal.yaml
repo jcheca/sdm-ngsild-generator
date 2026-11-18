@@ -1,0 +1,45 @@
+# Caso de uso: red de estaciones agroclimáticas que ya publica WeatherObserved y además
+# calcula la evapotranspiración de referencia (ET0, FAO-56 Penman-Monteith) y mide la
+# humectación foliar, datos que usan los regantes y los avisos fitosanitarios.
+# Fase 2: WeatherObserved encaja pero le faltan esos dos datos -> extender.
+metadata:
+  license: CC-BY-4.0
+  contributors:
+    - name: Example
+      surname: Contributor
+      organization: Example Agro-meteorological Network
+      year: 2026
+decisions:
+  - item: WeatherObserved
+    decision: extended
+    reason: The stations already publish WeatherObserved; only two agro-meteorological variables are missing
+    source: dataModel.Weather/WeatherObserved
+  - item: AgriParcelRecord
+    decision: discarded
+    reason: Parcel-level record; the data come from a weather station, not from a parcel
+    source: dataModel.Agrifood/AgriParcelRecord
+extensions:
+  - model: dataModel.Weather/WeatherObserved
+    reason: Agro-meteorological stations publish reference evapotranspiration and leaf wetness together with the usual weather variables; both are needed for irrigation scheduling and plant disease warnings
+    example:
+      observedAt: "2016-11-30T07:00:00.00Z"
+    attributes:
+      - name: referenceEvapotranspiration
+        type: number
+        minimum: 0
+        units: MMT
+        unitsText: millimetre
+        description: Reference crop evapotranspiration (ET0) accumulated over the observation period, computed with the FAO-56 Penman-Monteith method
+        temporal: true
+        example: 1.8
+        origin: new
+      - name: leafWetness
+        type: number
+        minimum: 0
+        maximum: 1
+        units: C62
+        description: Leaf wetness measured by the station sensor, as a ratio between 0 (dry) and 1 (wet)
+        temporal: true
+        example: 0.12
+        origin: reused
+        reusedFrom: dataModel.Agrifood/AgriParcelRecord
